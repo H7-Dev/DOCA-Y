@@ -1,0 +1,17 @@
+/.htaccess
+/composer.json
+/composer.lock
+/composer.phar
+/composerUpdate.bat
+/CONTROLLER
+/erro.php
+/home.php
+/index.php
+/index.tpl
+/LIB
+/MEDIA
+/MODEL
+/README.FAQ.MD
+
+/README.X.MD
+/VIEW
