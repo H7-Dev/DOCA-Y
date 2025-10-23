@@ -844,5 +844,976 @@ No **custeio por absorção**, **todos** os custos de fabricação **diretos e i
 
 
 
+## `Módulo__Comercial:` Onde o ciclo do Contrato Nasce
 
 
+```Ruby
+[ CAPÍTULO I — IDENTIDADE & ESCOPO ]
+│  Quadro Kanban para gestão de contratos de locação, focado em operação diária e visão por status.
+│  ├─ Art.1  ✔ Módulo: “Kanban — Contratos de Locação”
+│  ├─ Art.2  ✔ Unidades de tempo: meses (status e prazos)
+│  ├─ Art.3  ✔ Clientes e tipos de equipamentos visíveis no cabeçalho
+│  └─ Art.4  ✔ Pág. preparada para reunião: leitura rápida e ações diretas
+│
+├──▶ (Propósito) → Centralizar o ciclo de vida dos contratos em listas (estilo Trello) com filtros e exportação.
+│
+
+[ CAPÍTULO II — COLUNAS (LISTAS) DO BOARD ]
+│  Estrutura operacional do funil de contratos.
+│  ├─ Art.1  ✔ Propostas — negociações em curso
+│  ├─ Art.2  ✔ Ativos — contratos vigentes
+│  ├─ Art.3  ✔ Renovação — próximos do vencimento / decisão
+│  └─ Art.4  ✔ Encerrados — concluídos ou cancelados
+│
+├──▶ (Leitura) → Cada coluna exibe contagem dinâmica de cartões.
+│
+
+[ CAPÍTULO III — CARTÕES (RECURSOS POR CONTRATO) ]
+│  O que cada cartão mostra e permite.
+│  ├─ Art.1  ✔ Título: Código • Cliente (ex.: C-2407 • Fortes)
+│  ├─ Art.2  ✔ Subtítulo: Equipamento(s) • período (início → fim) • local (Cidade–UF)
+│  ├─ Art.3  ✔ Metadados: status em meses (Ativo / Renovação / Atrasado / Encerrado)
+│  ├─ Art.4  ✔ Badges: valor mensal (R$), cliente, etiquetas (labels de cor)
+│  └─ Art.5  ✔ Ação rápida: abrir/inspecionar o contrato
+│
+├──▶ (Rastreio) → Identificação visual imediata de valor, prazo e contexto.
+│
+
+[ CAPÍTULO IV — STATUS & PRAZOS (INTELIGÊNCIA DE PRAZO EM MESES) ]
+│  Cálculo automático do status com base em início + duração.
+│  ├─ Art.1  ✔ Ativo: “vence em X meses” (ou este mês)
+│  ├─ Art.2  ✔ Renovação: “vence em X meses” ou “vence este mês”
+│  ├─ Art.3  ✔ Atrasado: “venceu há X meses” (quando aplicável)
+│  └─ Art.4  ✔ Encerrado / Cancelado: indicação de conclusão ou cancelamento
+│
+├──▶ (Benefício) → Priorização clara para decisão de renovação e follow-up comercial.
+│
+
+[ CAPÍTULO V — FILTROS & TOOLBAR ]
+│  Foco em recorte por carteira e por frota.
+│  ├─ Art.1  ✔ Filtro por cliente (dropdown populado pelos cartões)
+│  ├─ Art.2  ✔ Filtro por tipo de equipamento (ex.: Módulo Habitacional, Container)
+│  ├─ Art.3  ✔ Ação “Limpar filtros” (retoma visão geral)
+│  └─ Art.4  ✔ Exportações rápidas (JSON / CSV) para análise externa
+│
+├──▶ (Objetivo) → “Ver só o que me importa” em 2 cliques.
+│
+
+[ CAPÍTULO VI — CRIAÇÃO RÁPIDA (MODAL “NOVO CONTRATO”) ]
+│  Cadastre o contrato já na coluna correta.
+│  ├─ Art.1  ✔ Escolha da coluna (Propostas / Ativos / Renovação / Encerrados)
+│  ├─ Art.2  ✔ Campos-chave: Código, Cliente, Valor mensal, Tipo/Modelo, Qtde
+│  ├─ Art.3  ✔ Prazos: Início (mês) + Duração (meses) → fim calculado
+│  ├─ Art.4  ✔ Local: Cidade / UF
+│  └─ Art.5  ✔ Etiquetas (tags) para segmentação e buscas futuras
+│
+├──▶ (Ganho) → Menos planilha; mais operação viva e padronizada.
+│
+
+[ CAPÍTULO VII — MOVIMENTAÇÃO (DRAG & DROP) ]
+│  Atualização de status por arrastar entre colunas.
+│  ├─ Art.1  ✔ Arraste o cartão para mudar a etapa (funil)
+│  ├─ Art.2  ✔ Recalcula status e prazos ao reposicionar
+│  ├─ Art.3  ✔ Mantém contadores e filtros consistentes
+│  └─ Art.4  ✔ Feedback visual de área de soltar (drag-over)
+│
+├──▶ (Agilidade) → Gestão de pipeline fluida e colaborativa.
+│
+
+[ CAPÍTULO VIII — EXPORTAÇÃO & COMPARTILHAMENTO ]
+│  Saídas para auditoria, BI e reuniões.
+│  ├─ Art.1  ✔ Exportar JSON: estrutura completa do board (colunas + cartões)
+│  ├─ Art.2  ✔ Exportar CSV: coluna, código, cliente, equipamento, qtde, cidade/UF, início, fim, duração, valor, status
+│  ├─ Art.3  ✔ Nome de arquivo padronizado (kanban-contratos.*)
+│  └─ Art.4  ✔ Compatível com planilhas e ingestão em BI
+│
+├──▶ (Evidência) → Facilita prestação de contas e prognósticos.
+│
+
+[ CAPÍTULO IX — PERSISTÊNCIA & BOOTSTRAP ]
+│  Como os dados aparecem e permanecem.
+│  ├─ Art.1  ✔ Persistência local (localStorage) — mantém o board do usuário
+│  ├─ Art.2  ✔ Restauração automática ao reabrir
+│  ├─ Art.3  ✔ Fallback: seed interno se não houver fonte externa
+│  └─ Art.4  ✔ Opcional: carregar JSON externo (quando disponível)
+│
+├──▶ (Confiabilidade) → O time não perde o contexto entre sessões.
+│
+
+[ CAPÍTULO X — ACESSIBILIDADE, RESPONSIVIDADE & UX ]
+│  Garantias de uso em desktop e dispositivos móveis.
+│  ├─ Art.1  ✔ Colunas com cabeçalho “sticky” (título + contagem + novo)
+│  ├─ Art.2  ✔ Scroll horizontal suave, cartões compactos e legíveis
+│  ├─ Art.3  ✔ Temas claro/escuro; cores por severidade/estado
+│  └─ Art.4  ✔ Controles de formulário com rótulos e foco bem definidos
+│
+├──▶ (Experiência) → Visão limpa para reunião e operação diária.
+│
+
+[ CAPÍTULO XI — KPIs IMPLÍCITOS (NA PRÓPRIA TELA) ]
+│  Sinais para discussão de performance durante a reunião.
+│  ├─ Art.1  ✔ Contagem por coluna (propostas, ativos, renovação, encerrados)
+│  ├─ Art.2  ✔ “Vence em X meses” (pipeline de risco de churn)
+│  ├─ Art.3  ✔ Valor mensal por contrato (visão rápida de receita recorrente)
+│  └─ Art.4  ✔ Etiquetas/locais (mix por cliente, praça, tipo)
+│
+├──▶ (Leitura de gestão) → Oportunidades de renovação e gargalos ficam visíveis.
+│
+
+[ CAPÍTULO XII — FLUXO OPERACIONAL (PIPELINE) ]
+│  Sequência do uso ao resultado para a reunião.
+│  ├─ Art.1  ✔ Selecionar filtros (cliente / equipamento) → visão segmentada
+│  ├─ Art.2  ✔ Arrastar contratos para refletir estágio real
+│  ├─ Art.3  ✔ Registrar novos contratos pelo modal (dados mínimos)
+│  ├─ Art.4  ✔ Conferir prazos (“vence em X meses”) e priorizar renovação
+│  ├─ Art.5  ✔ Exportar CSV/JSON para ata e acompanhamento
+│  └─ Art.6  ✔ Persistir estado; retomar na próxima reunião do mesmo ponto
+│
+├──▶ (Síntese) → FILTRAR → ATUALIZAR (DnD/novo) → PRIORIZAR → EXPORTAR → PERSISTIR.
+│
+
+[ CAPÍTULO XIII — GOVERNANÇA & AUDITABILIDADE ]
+│  Controles para confiança nas informações apresentadas.
+│  ├─ Art.1  ✔ Dados mínimos obrigatórios no cadastro (cliente, início, duração)
+│  ├─ Art.2  ✔ Cálculo determinístico de fim e status (base mês)
+│  ├─ Art.3  ✔ Exportações como “prova” do estado do pipeline
+│  └─ Art.4  ✔ Padronização de labels e tipos de equipamento
+│
+├──▶ (Contrato) → Transparência para decisões comerciais e operacionais.
+│
+
+├──▶ (Fluxo Geral) → COLUNAS (funil) → CARTÕES (dados) → FILTROS (recorte) → DnD (atualização) → EXPORTS (evidência) → PERSISTÊNCIA (continuidade)
+│
+
+```
+
+
+## `Módulo__Juridico:` Ciclo de Vída (Aprovado/Reprovado)
+
+
+```RUBY
+[ CAPÍTULO I — IDENTIDADE & ESCOPO (JURÍDICO) ]
+│  Board Kanban estático para ciclo de contratos (wireframe — Parte 1).
+│  ├─ Art.1  ✔ Página: “Jurídico — Contratos • Board Kanban”
+│  ├─ Art.2  ✔ Tema compatível claro/escuro (tokens de cor e tipografia)
+│  ├─ Art.3  ✔ Layout responsivo (2/4/6 colunas por breakpoint)
+│  └─ Art.4  ✔ Sem JS nesta fase; foco em estrutura visual e recursos da página
+│
+├──▶ (Propósito) → Visão unificada do fluxo contratual para reunião e priorização.
+│
+[ CAPÍTULO II — ORIENTAÇÃO (HEAD & SUBTÍTULO) ]
+│  Contextualiza o fluxo e como ler o board.
+│  ├─ Art.1  ✔ Título com trilha “Jurídico — Contratos”
+│  ├─ Art.2  ✔ Descrição: colunas = estágios; cartões = dados-chave
+│  └─ Art.3  ✔ Separadores e sombras para hierarquia visual
+│
+├──▶ (Leitura) → Entendimento imediato do que o board cobre.
+│
+[ CAPÍTULO III — FILTROS & AÇÕES DE TOPO (ESTÁTICOS) ]
+│  Controles presentes na página (placeholders funcionais).
+│  ├─ Art.1  ✔ Busca textual (contrato/cliente/número/tag)
+│  ├─ Art.2  ✔ Chips indicativos: Período, Unidade, Tipo de contrato
+│  ├─ Art.3  ✔ Botão “Novo Contrato” (entrada no funil)
+│  └─ Art.4  ✔ Botão “Exportar” (preparado para saída de dados)
+│
+├──▶ (Objetivo) → Preparar recorte e ações para a reunião, mesmo sem JS.
+│
+[ CAPÍTULO IV — COLUNAS DO FLUXO (CORE DO BOARD) ]
+│  Esteira principal de status exibida na página.
+│  ├─ Art.1  ✔ Pedidos de contrato (requests)
+│  ├─ Art.2  ✔ Em elaboração (draft)
+│  ├─ Art.3  ✔ Em revisão e negociação (review)
+│  ├─ Art.4  ✔ Aguardando aprovação (approval)
+│  ├─ Art.5  ✔ Enviado para assinatura (sent)
+│  ├─ Art.6  ✔ Assinado — aguardando vigência (signed_pending)
+│  └─ Art.7  ✔ Vigentes (active)
+│
+├──▶ (Indicadores) → Contador por coluna (badge) visível na página.
+│
+[ CAPÍTULO V — CARTÕES (INFORMAÇÃO DISPONÍVEL) ]
+│  O que cada card entrega para discussão na reunião.
+│  ├─ Art.1  ✔ Título do contrato (ex.: “SLA de suporte — Gamma”)
+│  ├─ Art.2  ✔ Metadados: cliente, modelo, owner, prazo, e-sign, etc.
+│  ├─ Art.3  ✔ Badges visuais: OK / Aviso / Crítico (com cores)
+│  ├─ Art.4  ✔ Barra de progresso (percentual do avanço do caso)
+│  └─ Art.5  ✔ Tags rápidas (risco, pendências, tipo, aprovação)
+│
+├──▶ (Rastreio) → O essencial para decidir próximos passos sem abrir detalhe.
+│
+[ CAPÍTULO VI — OPCIONAIS / BACKLOG (COLUNAS SUPLEMENTARES) ]
+│  Áreas já previstas pela página para estados paralelos.
+│  ├─ Art.1  ✔ Em renovação (renewal_due)
+│  ├─ Art.2  ✔ Vencidos (expired)
+│  ├─ Art.3  ✔ Suspensos (on_hold)
+│  ├─ Art.4  ✔ Encerrados/Rescindidos (terminated)
+│  ├─ Art.5  ✔ Arquivados (archived)
+│  └─ Art.6  ✔ Cancelados (canceled)
+│
+├──▶ (Cobertura) → Históricos e exceções mapeados no próprio board.
+│
+[ CAPÍTULO VII — DESIGN DE USABILIDADE (O QUE A PÁGINA PROVÊ) ]
+│  Recursos visuais que favorecem leitura na reunião.
+│  ├─ Art.1  ✔ Head “sticky” por coluna (título + contagem)
+│  ├─ Art.2  ✔ Grid fluido; cartões compactos e legíveis
+│  ├─ Art.3  ✔ Hierarquia por sombras/gradientes discretos
+│  └─ Art.4  ✔ Cores semânticas para risco e urgência
+│
+├──▶ (Experiência) → Escaneabilidade alta para decisões rápidas.
+│
+[ CAPÍTULO VIII — PRONTIDÃO PARA INTEGRAÇÕES (FUTURO) ]
+│  A página já reserva ganchos para dados e ações.
+│  ├─ Art.1  ✔ Botões “Novo” e “Exportar” prontos para ativação
+│  ├─ Art.2  ✔ Chips e busca preparados para filtrar/consultar
+│  └─ Art.3  ✔ Âncoras para seed JSON e JS (Parte 2/3) já previstas no HTML
+│
+├──▶ (Evolução) → Ativar filtros, criação e export com mínima intervenção.
+│
+[ CAPÍTULO IX — FLUXO OPERACIONAL (PIPELINE) ]
+│  Sequência linear do uso, do topo ao resultado na reunião.
+│  ├─ Art.1  ✔ Filtrar/Buscar (chips + campo de texto)
+│  ├─ Art.2  ✔ Percorrer colunas centrais (requests ▸ draft ▸ review ▸ approval ▸ sent ▸ signed_pending ▸ active)
+│  ├─ Art.3  ✔ Ler cartões (progresso, risco, pendências, prazos)
+│  ├─ Art.4  ✔ Endereçar exceções nos opcionais (renewal_due / expired / on_hold / terminated / archived / canceled)
+│  ├─ Art.5  ✔ Registrar decisão (via “Novo Contrato” ou marcação para ação)
+│  └─ Art.6  ✔ Preparar material de saída (via “Exportar”)
+│
+├──▶ (Síntese) → FILTRAR → PERCORRER → AVALIAR → PRIORIZAR → REGISTRAR → EXPORTAR.
+│
+[ CAPÍTULO X — GOVERNANÇA VISUAL & PADRONIZAÇÃO ]
+│  Garantias que a própria página já entrega.
+│  ├─ Art.1  ✔ Consistência de componentes (lanes/cards/badges)
+│  ├─ Art.2  ✔ Padrões de cor para risco (ok/warn/danger)
+│  ├─ Art.3  ✔ Contagem por coluna como KPI imediato
+│  └─ Art.4  ✔ Sem dependência de script para a apresentação (wireframe confiável)
+│
+├──▶ (Confiança) → A reunião acontece com estabilidade, mesmo “sem back-end”.
+│
+├──▶ (Fluxo Geral) → IDENTIDADE → FILTROS → COLUNAS → CARTÕES → OPCIONAIS → DECISÕES → EXPORT
+│
+```
+
+## `Módulo__Gestão:` Integração entre Comercial e Juridico com a Fabrica/Produção
+
+
+```Ruby
+
+[ CAPÍTULO I — IDENTIDADE & ESCOPO (FÁBRICA) ]
+│  Modelo de PIPELINE (EL-01) para gestão integrada de chão de fábrica.
+│  ├─ Art.1  ✔ Domínios: Contratos • Lotes • Estoque (MP/PA) • 5S/Compliance • Produção • Frota
+│  ├─ Art.2  ✔ Visões: Kanban por estágio + KPIs + Relatórios/Export
+│  ├─ Art.3  ✔ Unidades de tempo: dia/semana/mês • Responsáveis por área
+│  └─ Art.4  ✔ Preparado para reunião: leitura rápida, priorização e decisão
+│
+├──▶ (Propósito) → Unificar o ciclo “VENDER → PRODUZIR → ENTREGAR → SUSTENTAR” num fluxo único.
+│
+[ CAPÍTULO II — FILTROS & PARÂMETROS GLOBAIS ]
+│  Como recortar o contexto para análise.
+│  ├─ Art.1  ✔ Período (Hoje • 7d • 30d • Mês/Trimestre/Ano • Entre datas)
+│  ├─ Art.2  ✔ Unidades/Fábricas • Linhas • Turnos • Clientes/Projetos
+│  ├─ Art.3  ✔ Dimensões: Produto/Modelo • Lote • Contrato • Equipe
+│  └─ Art.4  ✔ Exports (CSV/JSON/PDF) e densidade (padrão/compacto)
+│
+├──▶ (Princípio) → Primeiro filtrar, depois comparar e agir.
+│
+[ CAPÍTULO III — MONITORAMENTO DE CONTRATOS (PÓS-JURÍDICO) ]
+│  Contratos aprovados e vigentes mapeados em funil operacional.
+│  ├─ Art.1  ✔ Colunas: Vigentes → Renovação (≤60d) → Atrasados → Encerrados/Cancelados
+│  ├─ Art.2  ✔ Card: Cliente • Valor mensal • Início→Fim (meses) • Local • Etiquetas
+│  ├─ Art.3  ✔ Status automático: “vence em X meses” / “venceu há X”
+│  └─ Art.4  ✔ Ações: renovar • reajustar • encerrar • exportar carteira
+│
+├──▶ (Indicador) → Receita recorrente, contratos a renovar, risco de churn.
+│
+[ CAPÍTULO IV — LOTES DE FABRICAÇÃO (MÓDULOS DO ZERO) ]
+│  Do desenho ao FAT/Despacho.
+│  ├─ Art.1  ✔ Colunas: Eng. & Liberação → Planejado → Em Produção → QA/FAT → Pronto p/ Expedição → Entregue
+│  ├─ Art.2  ✔ Card: Lote • Modelo • Qtd • Prazo • BOM travado • Responsáveis • “% concluído”
+│  ├─ Art.3  ✔ Gate de qualidade por etapa (checklist/pareto de falhas)
+│  └─ Art.4  ✔ Bloqueios: falta de MP • capacidade/máquina • pendência de cliente
+│
+├──▶ (Indicador) → OTIF por lote, lead time, gargalos por célula/estação.
+│
+[ CAPÍTULO V — ESTOQUE (MATÉRIAS-PRIMAS) ]
+│  Reposição e disponibilidade para produção.
+│  ├─ Art.1  ✔ Níveis: Mín/Máx • Cobertura (dias) • Giro
+│  ├─ Art.2  ✔ Alertas: Abaixo do mínimo • Itens críticos do dia • Itens sem movimentação
+│  ├─ Art.3  ✔ Integração: Reservas por Lote (alocação) • MRP simplificado
+│  └─ Art.4  ✔ Ações: sugerir compra • substituir item • reclassificar
+│
+├──▶ (Indicador) → Quebra por MP faltante evitada, compras com antecedência.
+│
+[ CAPÍTULO VI — ESTOQUE (PRODUTO ACABADO) ]
+│  Pronto para expedição vs pedido/contrato.
+│  ├─ Art.1  ✔ Mapa: PA disponível • PA reservado • PA em QA • PA despachado
+│  ├─ Art.2  ✔ SLA de expedição (dias) e janelas de carregamento
+│  ├─ Art.3  ✔ Rastreio: número de série • contrato/lote vinculado
+│  └─ Art.4  ✔ Ações: liberar • reter • retrabalhar • expedir
+│
+├──▶ (Indicador) → Fill rate, atrasos de embarque, backlog de entrega.
+│
+[ CAPÍTULO VII — 5S & COMPLIANCE (EXTINTORES • LICENÇAS • ALVARÁS) ]
+│  Rotina legal e de segurança sob controle visual.
+│  ├─ Art.1  ✔ Calendário de vencimentos (mensal/trimestral/anual)
+│  ├─ Art.2  ✔ Colunas: Em dia → Vence em 30d → Vence em 7d → Vencido
+│  ├─ Art.3  ✔ Itens: Extintores (selo/inspeção), Licenças Ambientais, Alvarás
+│  └─ Art.4  ✔ Ações: agendar inspeção • subir comprovantes • abrir não-conformidade
+│
+├──▶ (Indicador) → % conformidade por site/área, zero vencidos críticos.
+│
+[ CAPÍTULO VIII — RELATÓRIOS DE PRODUÇÃO ]
+│  Produção diária/mensal com custos e insumos.
+│  ├─ Art.1  ✔ KPIs: Quantidade produzida • Horas-homem • Horas-máquina
+│  ├─ Art.2  ✔ Consumo: MP por lote (Q/V) • Custo médio (CMP) • Desvios vs plano
+│  ├─ Art.3  ✔ Eficiência: OEE simplificado (disponibilidade • performance • qualidade)
+│  └─ Art.4  ✔ Export: diário de produção • custo por unidade • relatório por turno
+│
+├──▶ (Indicador) → Custo real × orçado, produtividade por célula.
+│
+[ CAPÍTULO IX — FROTA (MONITORAMENTO) ]
+│  Disponibilidade e utilização de veículos/equipamentos.
+│  ├─ Art.1  ✔ Status: Disponível • Em rota • Manutenção • Pátio
+│  ├─ Art.2  ✔ Metas: Utilização (%) • Km/L • Manutenção preventiva (vencimentos)
+│  ├─ Art.3  ✔ Vínculos: OS/Entrega • Motorista/Equipe • Rota
+│  └─ Art.4  ✔ Ações: agendar manutenção • bloquear uso • abrir ocorrência
+│
+├──▶ (Indicador) → Disponibilidade técnica, custo por km, aderência à preventiva.
+│
+[ CAPÍTULO X — VISÕES TRANSVERSAIS (PARA REUNIÃO) ]
+│  Cortes que combinam módulos.
+│  ├─ Art.1  ✔ “Hoje”: quebras de material, lotes críticos, entregas previstas, licenças 7d
+│  ├─ Art.2  ✔ “Semana”: OTIF, renovação de contratos, backlog de QA/expedição
+│  ├─ Art.3  ✔ “Mês”: Produtividade por linha, consumo MP, custos, disponibilidade da frota
+│  └─ Art.4  ✔ “Cliente/Projeto”: Contrato ↔ Lotes ↔ Entregas ↔ Cobrança
+│
+├──▶ (Valor) → Um roteiro único para a pauta da reunião.
+│
+[ CAPÍTULO XI — GOVERNANÇA & RASTREABILIDADE ]
+│  Regras para confiança dos dados (prontas para ativação).
+│  ├─ Art.1  ✔ Responsável por etapa (owner) e carimbo de data/hora
+│  ├─ Art.2  ✔ Checklists padrão (QA, segurança, expedição)
+│  ├─ Art.3  ✔ Logs de mudança (quem moveu o quê/quando)
+│  └─ Art.4  ✔ Versão/export como evidência (CSV/JSON/PDF)
+│
+├──▶ (Garantia) → Decisão auditável e repetível.
+│
+[ CAPÍTULO XII — FLUXO OPERACIONAL (PIPELINE GERAL) ]
+│  Sequência linear do uso à decisão.
+│  ├─ Art.1  ✔ FILTRAR contexto (período • unidade • cliente/produto)
+│  ├─ Art.2  ✔ CONTRATOS: revisar vigentes/renovação e riscos
+│  ├─ Art.3  ✔ LOTES: checar gating, bloqueios e liberar próximos passos
+│  ├─ Art.4  ✔ ESTOQUES: garantir MP crítica e PA p/ janelas de entrega
+│  ├─ Art.5  ✔ 5S/COMPLIANCE: resolver vencimentos (30d/7d) e pendências
+│  ├─ Art.6  ✔ PRODUÇÃO: validar volumes, HH/HM, consumo e desvios
+│  ├─ Art.7  ✔ FROTA: alinhar disponibilidade/rotas/manutenção
+│  ├─ Art.8  ✔ DECIDIR: priorizar ações, designar responsáveis e prazos
+│  └─ Art.9  ✔ EXPORTAR: atas, KPIs e planos (CSV/JSON/PDF)
+│
+├──▶ (Síntese) → FILTRAR → CONFERIR (módulos) → PRIORIZAR → DESIGNAR → EXPORTAR.
+│
+[ CAPÍTULO XIII — QUADRO DE KPIs (RESUMO PARA CAPA) ]
+│  Painel de abertura da reunião (uma linha por domínio).
+│  ├─ Art.1  ✔ Contratos: #vigentes • #renovar ≤60d • valor mensal
+│  ├─ Art.2  ✔ Lotes: #em produção • OTIF • gargalos (top-3 causas)
+│  ├─ Art.3  ✔ MP: itens < mínimo • dias de cobertura • compras sugeridas
+│  ├─ Art.4  ✔ PA: pronta-entrega • backlog de expedição • lead de QA
+│  ├─ Art.5  ✔ 5S/Compliance: % em dia • itens 30d/7d/vencidos
+│  ├─ Art.6  ✔ Produção: Qtd (dia/mês) • HH/HM • custo unitário real vs plano
+│  └─ Art.7  ✔ Frota: disponibilidade • preventiva vencendo • custo/km
+│
+└──▶ (Objetivo) → 1 slide para abrir a reunião e guiar a pauta.
+
+```
+
+
+## `Módulo__COMPRAS:` Regras para Compras
+
+
+```RUBY
+[ CAPÍTULO I — OBJETIVO & ESCOPO (FAQ QTD. SUGERIDA) ]
+│  Explicar e operacionalizar “quanto comprar agora” para repor estoque.
+│  ├─ Art.1  ✔ Público-alvo: Compras • PCP • Estoques
+│  ├─ Art.2  ✔ Entregáveis: entendimento rápido + simulador + exemplos + checklist
+│  ├─ Art.3  ✔ Acesso: busca por termos, navegação por chips, impressão
+│  └─ Art.4  ✔ Política base: Alvo = 1,5×Mínimo; Sugerido = ceil(max(0, Alvo − Atual))
+│
+├──▶ (Propósito) → Padronizar cálculo e reduzir decisões ad-hoc.
+│
+[ CAPÍTULO II — NAVEGAÇÃO & FERRAMENTAS ]
+│  Como o usuário encontra e consome a informação.
+│  ├─ Art.1  ✔ Barra de busca (abre seções que batem com o termo)
+│  ├─ Art.2  ✔ Chips de atalho (Objetivo, Conceitos, Alvo, Sugerido, Exemplos, etc.)
+│  ├─ Art.3  ✔ Expandir/Recolher tudo • Imprimir com tudo aberto
+│  └─ Art.4  ✔ Copiar fórmula (clipboard) • Limpar busca
+│
+├──▶ (Princípio) → Facilitar a leitura em reunião e o estudo individual.
+│
+[ CAPÍTULO III — CONCEITOS-CHAVE ]
+│  Vocabulário comum do cálculo.
+│  ├─ Art.1  ✔ Mínimo (nível de segurança)
+│  ├─ Art.2  ✔ Atual (estoque disponível)
+│  ├─ Art.3  ✔ Alvo (meta de reposição = 1,5×Mínimo)
+│  └─ Art.4  ✔ Sugerido (quanto comprar agora, com arredondamento ↑)
+│
+├──▶ (Resultado) → Mesma regra mental para toda a equipe.
+│
+[ CAPÍTULO IV — SIMULADOR RÁPIDO ]
+│  Entrada → Saída para decisão imediata.
+│  ├─ Art.1  ✔ Entradas: Mínimo • Atual • Arredondamento (ceil/none)
+│  ├─ Art.2  ✔ Política “Estoque Livre” (permitir ou forçar 0 quando Mínimo=0,001)
+│  ├─ Art.3  ✔ Saídas: Alvo • Diferença • Sugerido • Situação (badge)
+│  └─ Art.4  ✔ Ação: copiar fórmulas, aplicar presets de exemplo
+│
+├──▶ (Diagnóstico) → Mostra impacto de políticas antes de comprar.
+│
+[ CAPÍTULO V — REGRAS DO CÁLCULO ]
+│  Passo a passo formalizado.
+│  ├─ Art.1  ✔ Alvo = 1,5 × Mínimo
+│  ├─ Art.2  ✔ Diferença = Alvo − Atual
+│  ├─ Art.3  ✔ Sugerido = ceil(max(0, Diferença))
+│  └─ Art.4  ✔ Filtro de envio: só aparece se Sugerido > 0
+│
+├──▶ (Padronização) → Todos calculam igual, sem variações locais.
+│
+[ CAPÍTULO VI — EXEMPLOS TABELADOS ]
+│  Casos típicos para validação rápida.
+│  ├─ Art.1  ✔ Reposição clara (Atual < Mínimo)
+│  ├─ Art.2  ✔ Ainda precisa (Atual < Alvo, porém > Mínimo)
+│  ├─ Art.3  ✔ Acima do alvo (Sugerido = 0)
+│  ├─ Art.4  ✔ No limite (Sugerido = 0)
+│  └─ Art.5  ✔ Estoque Livre (0,001) — respeita política escolhida
+│
+├──▶ (Confiança) → Exemplos replicáveis para checagem em reunião.
+│
+[ CAPÍTULO VII — LEGENDAS & ESTADOS DE ESTOQUE ]
+│  Leitura visual padronizada do risco.
+│  ├─ Art.1  ✔ Sem estoque • Abaixo do mínimo • No mínimo • Próximo do mínimo
+│  ├─ Art.2  ✔ Adequado • Alto • Estoque Livre
+│  ├─ Art.3  ✔ Cores/badges: crit • warn • ok • neutro
+│  └─ Art.4  ✔ Regra de classificação exibida junto ao simulador
+│
+├──▶ (Clareza) → Todos interpretam o mesmo sem ambiguidade.
+│
+[ CAPÍTULO VIII — CHECKLIST DE QUALIDADE ]
+│  Itens que garantem a aplicação correta.
+│  ├─ Art.1  ✔ Confirmar Alvo = 1,5×Mínimo
+│  ├─ Art.2  ✔ Confirmar Sugerido = ceil(max(0, Alvo − Atual))
+│  ├─ Art.3  ✔ Conferir política de Estoque Livre
+│  ├─ Art.4  ✔ Verificar campos vazios/zeros e arredondamento por unidade
+│  └─ Art.5  ✔ Persistência local (marcações salvas)
+│
+├──▶ (Controle) → Evita erro operacional recorrente.
+│
+[ CAPÍTULO IX — LIMITAÇÕES & POLÍTICAS FUTURAS ]
+│  O que o modelo NÃO cobre (explícito para alinhamento).
+│  ├─ Art.1  ✔ Lead time do fornecedor (dias)
+│  ├─ Art.2  ✔ Consumo/demanda futura (MRP/OP)
+│  ├─ Art.3  ✔ Pedidos abertos (abatimento do sugerido)
+│  ├─ Art.4  ✔ MOQ e múltiplos de compra
+│  └─ Art.5  ✔ Preço/descontos (foco é quantidade física)
+│
+├──▶ (Roadmap) → Pauta para evoluções do cálculo corporativo.
+│
+[ CAPÍTULO X — RESUMO EM UMA FRASE ]
+│  “Compre o suficiente para atingir 1,5× o Mínimo; se já estiver lá, não compre.”
+│
+├──▶ (Mensagem-chave) → Orienta a decisão em 5 segundos.
+│
+[ CAPÍTULO XI — GOVERNANÇA & RASTREIO ]
+│  Evidência e auditoria do uso.
+│  ├─ Art.1  ✔ Versão das fórmulas e data/hora de consulta
+│  ├─ Art.2  ✔ Registro de política ativa (Estoque Livre • arredondamento)
+│  ├─ Art.3  ✔ Export/print como anexo de decisão
+│  └─ Art.4  ✔ Links diretos (#hash) para seções específicas
+│
+├──▶ (Confiabilidade) → Decisão documentada e repetível.
+│
+[ CAPÍTULO XII — FLUXO OPERACIONAL (PIPELINE EL-01) ]
+│  Sequência linear para uso em reunião ou no dia-a-dia.
+│  ├─ Art.1  ✔ BUSCAR termo → abrir seções relevantes
+│  ├─ Art.2  ✔ REVISAR Conceitos → alinhar vocabulário
+│  ├─ Art.3  ✔ CALCULAR no Simulador (definir políticas)
+│  ├─ Art.4  ✔ VALIDAR com Exemplos e Checklist
+│  ├─ Art.5  ✔ DECIDIR comprar (se Sugerido > 0) ou aguardar
+│  └─ Art.6  ✔ REGISTRAR evidência (imprimir/exportar) e próximos passos
+│
+└──▶ (Síntese) → BUSCAR → REVISAR → CALCULAR → VALIDAR → DECIDIR → REGISTRAR.
+
+```
+
+
+## `Módulo__Almoxarifado:` (INVENTÁRIO GERAL)
+
+```RUBY
+[ CAPÍTULO I — PROPÓSITO & ESCOPO (INVENTÁRIO GERAL) ]
+│  Garantir acurácia do estoque por contagem integral controlada.
+│  ├─ Público-alvo: Almoxarifado • PCP • Auditoria • Controladoria • TI/ERP
+│  ├─ Resultado: sessão criada → contagens → reconciliação → ajustes → relatórios
+│  └─ Integrações: Compras/NF-e • Produção • Fiscal/Financeiro • MDM/Cadastros
+│
+├──▶ Mensagem-chave: “Conte certo, explique o delta, ajuste com trilha de auditoria.”
+[ CAPÍTULO II — PRÉ-REQUISITOS & PARÂMETROS ]
+│  ├─ Endereçamento (depósito/rua/coluna/nível/posição) e SKUs (UM, lote/série).
+│  ├─ Cut-off de movimentações (lock por sessão) e janela de baixa controlada.
+│  ├─ Tolerâncias (qtd/valor) por item/grupo e regra de 2ª contagem automática.
+│  └─ Coleta: etiquetas, coletores/QR, anexos (foto/justificativa).
+[ CAPÍTULO III — TIPOS DE INVENTÁRIO SUPORTADOS ]
+│  Geral • Por localização • ABC • Cego • Dupla contagem (reconfirmação).
+│
+├──▶ Escolha o tipo antes de “lockar” a sessão para evitar retrabalho.
+[ CAPÍTULO IV — FLUXO (ESTADOS & GATES) ]
+│  planned → locked → counting → recount* → reconciling → approved → posted → closed
+│  ├─ *recount: divergência > tolerância
+│  ├─ approved: segregação de função (quem conta ≠ quem aprova)
+│  └─ posted: ajustes lançados (refletem em custo médio/valorização)
+[ CAPÍTULO V — PAPÉIS & PERMISSÕES ]
+│  ├─ Contador: coleta + anexos
+│  ├─ Conciliador: análise de divergências + proposta de ajuste (com causa)
+│  ├─ Aprovador: valida ajustes e encerra
+│  └─ Admin: parametrização, desbloqueios, trilha de auditoria
+[ CAPÍTULO VI — EXECUÇÃO DE CONTAGEM ]
+│  ├─ Roteirização por endereço com confirmação (geografia → item/lote/série/validade)
+│  ├─ Bloqueio momentâneo do endereço até recontagem quando aplicável
+│  └─ Evidências: foto, nota de avaria, observações operacionais
+[ CAPÍTULO VII — RECONCILIAÇÃO & CAUSAS ]
+│  ├─ SIS × Físico: delta (qtd/valor), ranking por impacto
+│  ├─ Causas: cadastro, perda/quebra, apont. produção, nota pendente, etc.
+│  ├─ Tolerância: aprova auto dentro do limite; fora do limite → recontar/aprovar
+│  └─ Proposta de ajuste: justificativa obrigatória + anexos
+[ CAPÍTULO VIII — AJUSTES & IMPACTOS ]
+│  ├─ Ajustes por item/endereço, com usuário, data, motivo
+│  ├─ Reflexo em CM/valorização + lançamento contábil (CFOP/contas do ERP)
+│  └─ Observação fiscal: variações por UF/regime — mapear previamente
+[ CAPÍTULO IX — UX DA TELA (AÇÕES & FILTROS) ]
+│  ├─ Botões: Criar sessão • Iniciar • Recontagem • Reconciliar • Aprovar • Lançar • Encerrar
+│  ├─ Filtros: depósito • endereço • classe ABC • responsável • situação
+│  └─ Exports: CSV/PDF (por sessão, divergência, ajuste) + anexos
+[ CAPÍTULO X — KPIs PARA REUNIÃO ]
+│  ├─ Acurácia (qtd/valor)
+│  ├─ % itens divergentes • Valor total divergente
+│  ├─ Tempo médio de contagem & reconciliação
+│  └─ % recontagem • % aprovações automáticas
+[ CAPÍTULO XI — MODELO DE DADOS (RESUMO TÉCNICO) ]
+│  inventory_sessions • inventory_tasks • inventory_counts
+│  inventory_discrepancies • inventory_adjustments • inventory_logs • inventory_attachments
+│
+├──▶ Ponto de auditoria: quem/quando/onde/porquê da alteração.
+[ CAPÍTULO XII — ERROS PADRÃO & MENSAGENS ]
+│  ├─ “Informe ao menos um depósito/endereço…”
+│  ├─ “Não é possível iniciar: movimentações em andamento…”
+│  ├─ “Recontagem obrigatória: divergência acima da tolerância.”
+│  └─ “Justificativa obrigatória para aprovar ajuste.”
+[ CAPÍTULO XIII — CHECKLIST RÁPIDO (DO/KILL SWITCH) ]
+│  ☐ Parâmetros revisados (planned)  ☐ Lock aplicado (locked)
+│  ☐ 1ª contagem e recontagem concluídas (counting → recount)
+│  ☐ Reconciliação/causas documentadas (reconciling)
+│  ☐ Aprovação segregada (approved)  ☐ Lançamentos (posted)
+│  ☐ Relatórios/anexos publicados (closed)
+[ CAPÍTULO XIV — RISCOS & MITIGAÇÕES ]
+│  ├─ Risco: contagem com movimentação ativa → Mitigação: lock + janela controlada
+│  ├─ Risco: tolerância mal calibrada → Mitigação: piloto por ABC e ajuste fino
+│  ├─ Risco: erro de cadastro → Mitigação: MDM + validação de UM/lote/série
+│  └─ Risco: impacto contábil indevido → Mitigação: CFOP/contas homologadas
+[ CAPÍTULO XV — PIPELINE OPERACIONAL (INV-01) ]
+│  1) PLANEJAR — definir escopo, tolerâncias, papéis → criar sessão (planned)
+│  2) BLOQUEAR — aplicar cut-off/lock (locked)
+│  3) CONTAR — execução 1ª contagem (counting) + recontagem automática (recount)
+│  4) RECONCILIAR — analisar deltas, causas, proposta de ajustes (reconciling)
+│  5) APROVAR — segregação de função e aceite (approved)
+│  6) LANÇAR — ajustes no ERP (posted), atualização de custo/valor
+│  7) ENCERRAR — relatórios, anexos, trilha e fechamento (closed)
+│
+└──▶ Saída da reunião: sessão com cronograma, donos, tolerâncias e metas de acurácia.
+
+```
+
+
+## `Módulo__Almoxarifado:` (Inventário Ciclico)
+
+
+```Ruby
+[ CAPÍTULO I — PROPÓSITO & ESCOPO (CONTAGEM CÍCLICA) ]
+│  Garantir acurácia contínua com pequenas contagens recorrentes e dirigidas.
+│  ├─ Foco: itens/endereços críticos (ABC, valor, giro, risco, histórico)
+│  ├─ Impacto: mínima interrupção operacional (sem parar o armazém inteiro)
+│  └─ Saída: plano cíclico ativo → tarefas geradas → contagens → reconciliações → ajustes
+│
+├──▶ Mensagem-chave: “Conte pouco, conte sempre, corrija cedo.”
+
+[ CAPÍTULO II — DIFERENÇAS VS. INVENTÁRIO GERAL ]
+│  ├─ Escopo: subconjuntos (cíclico) × 100% do estoque (geral)
+│  ├─ Frequência: recorrente (cíclico) × pontual (geral)
+│  ├─ Operação: baixa interferência (cíclico) × geralmente com cut-off (geral)
+│  └─ Métrica: tendência de acurácia (cíclico) × acurácia do marco (geral)
+
+[ CAPÍTULO III — ESTRATÉGIAS DE AGENDAMENTO ]
+│  ├─ ABC/Valor: A diário/semana • B semanal/quinzenal • C mensal/trimestral
+│  ├─ Giro/Movimentação: mais movimento = mais frequência
+│  ├─ Risco/Controle: seriados, perecíveis, críticos primeiro
+│  ├─ Endereços: rotas por rua/posição (cobertura semanal de zonas quentes)
+│  └─ Histórico: reforçar onde houve divergência recente
+
+[ CAPÍTULO IV — FLUXO (ESTADOS & GATES) ]
+│  scheduled → counting → recount* → reconciling → posted → done
+│  ├─ scheduled: tarefas emitidas pelo plano
+│  ├─ counting: coleta (qtd, lote/série/validade quando aplicável)
+│  ├─ recount*: recontagem automática fora de tolerância
+│  ├─ reconciling: causa raiz + proposta de ajuste
+│  ├─ posted: ajuste lançado (reflete em custo/valorização no ERP)
+│  └─ done: tarefa encerrada com trilha e anexos
+
+[ CAPÍTULO V — CONFIGURAÇÃO DO PLANO ]
+│  ├─ Critérios: ABC • valor • giro • risco • histórico
+│  ├─ Frequências: diária • semanal • quinzenal • mensal
+│  ├─ Escopo: depósitos • ruas/posições • famílias • lotes/séries
+│  ├─ Tolerâncias por item/grupo (qtd/valor) + 2ª contagem automática
+│  ├─ Modo: cego (sem saldo SIS) × assistido
+│  └─ Janelas operacionais e time responsável
+
+[ CAPÍTULO VI — EXECUÇÃO & COLETA ]
+│  ├─ Roteiro por endereço com confirmação (código de barras/QR)
+│  ├─ Bloqueio temporário do endereço até finalizar contagem/recontagem
+│  ├─ Captura de avarias e anexos (foto/observação)
+│  └─ Usabilidade: leitor móvel/coletor + validação de localização
+
+[ CAPÍTULO VII — RECONCILIAÇÃO & AJUSTES ]
+│  ├─ Comparação SIS × físico: delta em quantidade e valor
+│  ├─ Causas: cadastro, processo, apontamento, nota pendente, perda/quebra
+│  ├─ Workflow: dentro da tolerância → auto-aprova • fora → aprovação superior
+│  └─ Lançamentos: impacto em custo médio e valorização segundo regras do ERP
+
+[ CAPÍTULO VIII — INTEGRAÇÕES ]
+│  Compras/NF-e (notas pendentes) • Produção (consumo/sobras) • Manutenção (OS)
+│  Financeiro/Fiscal (valorização/provisões) • MDM/Cadastros (SKU/UM/endereços)
+
+[ CAPÍTULO IX — MODELO DE DADOS (RESUMO TÉCNICO) ]
+│  cc_plans • cc_tasks • cc_counts • cc_discrepancies • cc_adjustments • cc_logs
+│
+├──▶ Ponto de auditoria: quem, quando, onde, o quê e por quê (ID da tarefa e do endereço).
+
+[ CAPÍTULO X — PAPÉIS & PERMISSÕES ]
+│  ├─ Contador: executa tarefas e coleta
+│  ├─ Conciliador: trata divergências e propõe ajustes
+│  ├─ Aprovador: valida ajustes fora da tolerância
+│  └─ Admin: cria/edita planos, frequências e tolerâncias
+
+[ CAPÍTULO XI — KPIs (VISÃO DE REUNIÃO) ]
+│  ├─ Acurácia parcial (qtd/valor) e tendência por ABC/deposito/endereço
+│  ├─ % divergência e valor total divergente (heatmap por localização)
+│  ├─ Lead time: execução e reconciliação por tarefa
+│  ├─ % tarefas com recontagem
+│  └─ % auto-aprovação dentro da tolerância
+
+[ CAPÍTULO XII — MENSAGENS PADRÃO ]
+│  ├─ “Plano cíclico sem critérios definidos.”
+│  ├─ “Endereço inválido ou bloqueado por outra tarefa.”
+│  ├─ “Recontagem obrigatória: divergência acima da tolerância.”
+│  └─ “Permissão insuficiente para ajuste fora da tolerância.”
+
+[ CAPÍTULO XIII — CHECKLIST RÁPIDO ]
+│  ☐ Plano com critérios & frequências  ☐ Tarefas atribuídas (scheduled)
+│  ☐ Contagens feitas e recontagens quando necessário (counting → recount)
+│  ☐ Reconciliação concluída (reconciling)  ☐ Ajustes lançados (posted)
+│  ☐ Tendência de acurácia acompanhada e ações corretivas em curso
+
+[ CAPÍTULO XIV — RISCOS & MITIGAÇÕES ]
+│  ├─ Falta de cobertura de áreas críticas → Rotas semanais por endereço
+│  ├─ Tolerância mal calibrada → Piloto por ABC + ajuste fino
+│  ├─ Falhas de cadastro → Governança MDM (UM/lote/série)
+│  └─ Ajuste contábil indevido → matriz CFOP/contas homologada + aprovação
+
+[ PIPELINE OPERACIONAL (CC-01) — “DA REGRA À CORREÇÃO” ]
+│  1) DEFINIR → critérios, frequências, escopo e tolerâncias (plano cíclico)
+│  2) GERAR → tarefas (scheduled) por calendário/regra
+│  3) EXECUTAR → coleta guiada por endereço (counting)
+│  4) RECONTAR → automático quando fora da tolerância (recount)
+│  5) RECONCILIAR → causa raiz + proposta de ajuste (reconciling)
+│  6) APROVAR/LANÇAR → ajustes no ERP (posted)
+│  7) FEEDBACK → atualizar KPIs, rotas e parâmetros (melhoria contínua)
+│
+└──▶ Saída da reunião: plano cíclico aprovado (ABC/giro/risco), calendário por área,
+tolerâncias por grupo, donos definidos e painel de KPIs para acompanhamento semanal.
+
+```
+
+
+# `Módulo__Almoxarifado:` · Almoxarifado — Movimentação Operacional & Governança
+
+> **Escopo:** desenho ponta-a-ponta para entradas, saídas, devoluções e retornos (5S/Simples), com monitoramento de estoque, geração de pedidos semi-automáticos e relatórios operacionais/gerenciais. **Foco:** execução rápida (atalhos/teclado), rastreabilidade e disciplina de uso.
+
+
+## 0) Objetivo do pipeline
+
+* Garantir **agilidade operacional** no balcão do almoxarifado (sem mouse, com atalhos).
+* Assegurar **rastreabilidade** por item, pessoa, contrato/OP e motivo.
+* Sustentar **acurácia de estoque** e **compliance** (devoluções, 5S, EPIs).
+* Alimentar **reposição inteligente** (pedido semi-automático) e **analytics**.
+
+
+## 1) Macrofluxo (fases e gates)
+
+1. **Planejar & Parametrizar**
+   Definições de catálogo, políticas (devolução obrigatória, 5S), atalhos, integrações e perfis.
+
+2. **Capturar Evento de Estoque** *(frontline)*
+   Entrada | Saída | Devolução | Retorno 5S | Retorno Simples — todos via **modo PDV** (teclado/scan) com validações.
+
+3. **Validar & Registrar**
+   Checagens (saldo, obrigatoriedades), vinculação (cliente/contrato/OP/centro de custo), **auditoria** e anexos (quando necessário).
+
+4. **Consolidar & Reconciliar**
+   Atualização de saldos, movimentação contábil (se aplicável), pendências de devolução e fila de exceções.
+
+5. **Repor & Monitorar**
+   Cálculo de reposição (mínimo/ideal, lead time, múltiplos, pedidos em trânsito), **pedido semi-automático** e alertas.
+
+6. **Analisar & Melhorar**
+   Relatórios (tempo real e períodos), KPIs, inspeções 5S, ações corretivas (treino/cadastro/processo), auditorias.
+
+**Gates críticos:**
+G1 Parametrização ok → G2 Validações ok → G3 Movimentação registrada → G4 Pendências tratadas → G5 Reposição gerada/avaliada.
+
+
+## 2) Cenários operacionais (nível de detalhe)
+
+### 2.1 Entrada de Materiais
+
+* **Modos de captura:**
+  a) **Bipar chave** (QR/Code128) · b) **Digitar chave** · c) **Manual** (cadastro rápido) · d) **Apontamento** (sem documento fiscal).
+* **Dados mínimos:** chave/doc, fornecedor (ou origem interna), item, UM, Qtd, Lote/Série/Validade (se aplicável), **finalidade** (contrato/OP/CC), anexos.
+* **Regras:** bloqueio de duplicidade de chave; tolerâncias de recebimento; quarentena (qualidade) opcional.
+* **Saída:** movimentação **ENTRADA** registrada, saldo atualizado, vínculo com compra (se houver).
+
+### 2.2 Saída de Material (modo PDV/teclado)
+
+* **UX:** pesquisa por **código/scan** → selecionar → informar **contrato/OP/cliente** → **confirmar** (Enter).
+* **Atalhos:** F1 Buscar | F2 Qtd | F3 Alternar UM | F4 Motivo | F5 Trocar destino | F9 Confirmar | ESC Cancelar.
+* **Regras:** verificação de saldo; política de **devolução obrigatória** por família (ex.: discos, EPIs); bloqueio por validade/lote.
+* **Saída:** movimentação **SAÍDA**, com solicitante (**quem pegou**), liberador (**quem entregou**), local de consumo.
+
+### 2.3 Devolução de Material
+
+* **Uso típico:** troca de consumível (ex.: **disco de corte** — obrigatório devolver o usado).
+* **Regras:** configuração por item/família (**Obrigatório**, **Opcional**, **Dispensado**).
+* **Efeito:** movimentação **DEVOLUÇÃO** (retorno ao estoque adequado ou descarte 5S), abertura/fecho de **pendência** quando não devolvido.
+
+### 2.4 Retorno 5S (sucata, quebrado, EPI inutilizado)
+
+* **Classificação:** **não reaproveitável** → baixa para **perda/consumo 5S**; **reaproveitável** → retorno a estoque secundário.
+* **Registro:** motivo 5S (avaria, desgaste, vencimento), foto opcional, responsável.
+* **Saída:** movimentação **RETORNO 5S** (mov. contábil/fiscal conforme regras). Indicadores de desperdício.
+
+### 2.5 Retorno Simples
+
+* **Uso:** pegou por engano; reabastecer o mesmo endereço.
+* **Efeito:** movimentação **RETORNO** com referencial à saída original (quando houver), sem carimbar 5S.
+
+---
+
+## 3) Relatórios & Visões (tempo real e períodos)
+
+* **Filtros (todas as visões):** período (hoje, 15d, mês, tri/semestre/ano, custom), material, família, contrato, OP, cliente, solicitante, liberador, centro de custo, tipo de movimento, unidade/deposito/endereço.
+* **Operacional (tempo real):**
+
+  * **Fila de balcão:** últimas saídas/devoluções com badges de pendência.
+  * **Pendências de devolução:** por colaborador/item/prazo.
+* **Consumo por destino:** “O que saiu” por **cliente/contrato/OP** (quantidade, valor, top N itens).
+* **Produtividade de colaborador:** **quem solicitou** (freq./dia, itens por visita, desvio padrão de consumo).
+* **Conformidade:** **quem liberou** (conferente/almoxarife/encarregado), violações de política.
+* **Mix & finalidade:** tipo de material (**venda/locação/outros**), mapa de uso por família.
+* **Ciclo de reposição:** sugestão x pedido gerado x recebido; lead time médio; ruptura evitada.
+* **Export:** CSV/PDF; API para BI.
+
+
+## 4) Monitoramento de Estoque & Reposição
+
+### 4.1 Governança de Notas/Finalidade
+
+* **Ação ao Compras:** exigir **discriminação de itens e finalidade** (para quê/qual contrato/OP/centro de custo).
+* **Validação:** bloqueio de entrada sem finalidade quando política ativa.
+
+### 4.2 Pedido Semi-Automático
+
+* **Lógica base:** Alvo = 1,5×Mínimo; Sugerido = ceil(max(0, Alvo − (Atual + Em trânsito))).
+* **Aprimoradores (opcionais):** lead time, **múltiplos de compra**/MOQ, sazonalidade, mínimos por embalagem, estoque de segurança dinâmico.
+* **Workflow:** Sugestões → revisão (Compras/Almox) → **gerar pedido** → integração ERP.
+
+### 4.3 Catálogo & Uso
+
+* **Catálogo mestre:** código, descrição, UM, famílias, **política de devolução**, 5S, validade/lote, destinos permitidos.
+* **Regras de uso:** por **tipo** (venda/locação/obra/serviço), **centro de custo**, **contrato**, **OP**.
+
+### 4.4 Ferramentas (viabilidade de controle)
+
+* **Empréstimo x Devolução:** vínculo a colaborador/OS, prazo, estado.
+* **Manutenção preventiva/ciclo:** check-in/out; bloqueio por manutenção/inspeção.
+* **Perdas/avarias:** canal 5S e responsabilização.
+
+
+## 5) Papéis, SLAs e Controles
+
+| Papel              | Responsabilidades principais                                        | SLAs típicos                                         |
+| ------------------ | ------------------------------------------------------------------- | ---------------------------------------------------- |
+| **Solicitante**    | Retirar/devolver conforme política; informar contrato/OP            | Atender em **≤ 2 min** no balcão                     |
+| **Almoxarife**     | Registrar movimentos; zelar por atalhos/PDV; checar saldos/validade | 100% de movimentos com **responsáveis** e **motivo** |
+| **Conferente**     | Conferir entradas; checar pendências de devolução                   | Entrada registrada **no dia**                        |
+| **Compras**        | Discriminar finalidade e revisar pedidos semi-automáticos           | Revisão em **≤ 24 h**                                |
+| **Gestor**         | Monitorar KPIs, aprovar exceções e políticas                        | Exceções tratadas **≤ 48 h**                         |
+| **SSMA/Qualidade** | Acompanhar 5S, EPIs, descarte correto                               | Pendências 5S **0 > 5 dias**                         |
+
+**Controles/alertas:**
+
+* **Pendência de devolução** por colaborador/item com SLA (ex.: 48 h).
+* **Saída sem contrato/OP** (bloqueio ou justificativa).
+* **Validade/lote** — bloqueio para itens vencidos.
+* **Ruptura** iminente (estoque < mínimo + lead time).
+* **Uso anômalo** (padrão fora da faixa por colaborador/obra).
+
+## 6) Dados & Integrações
+
+**Entidades-chave:**
+
+* `items` (catálogo), `stock_lots` (lote/série/validade), `locations` (depósito/endereço),
+  `movements` (entrada/saída/devolução/retorno/5S), `pendings` (devolução),
+  `orders` (pedidos de compra), `invoices` (NF/sem doc), `contracts`, `production_orders`, `people`.
+
+**Integrações:**
+
+* **ERP/Compras/Fiscal:** notas, pedidos, CFOP/contábil.
+* **Produção:** OP/baixas; **Projetos/Contratos**: vinculação de consumo.
+* **SSMA/Qualidade:** EPIs, inspeções, descarte.
+* **BI/Datamart:** fatos de movimento e saldos diários.
+
+
+## 7) Regras & Políticas (essenciais)
+
+* **Devolução obrigatória por família** (ex.: disco, broca, EPI reutilizável).
+* **Retornos 5S** com motivo padronizado e, quando aplicável, **foto/anexo**.
+* **Sem documento fiscal:** permitido via **Apontamento** com justificativa e aprovação (trilha).
+* **Modo PDV/teclado:** operações críticas devem ser possíveis **sem mouse**; atalhos publicados no balcão.
+* **Auditoria:** todo movimento tem **quem pediu**, **quem liberou**, **onde será usado** e **por quê**.
+
+
+## 8) KPIs & Painéis
+
+* **Acurácia de estoque** (quantidade/valor).
+* **Rupturas evitadas** e **nível de serviço** do balcão.
+* **Pendências de devolução** (qtde, SLA, reincidência por colaborador).
+* **Consumo por destino** (cliente/contrato/OP/CC) e por **família**.
+* **Tempo médio de atendimento** no balcão (solicitação→liberação).
+* **Reposição:** sugestão x pedido x entrega; **lead time** e **aderência a múltiplos/MOQ**.
+* **5S/Descarte:** volume e valor por motivo (avaria, desgaste, vencimento).
+* **Produtividade:** visitas/dia por colaborador, itens/visita, top consumidores.
+
+
+## 9) Exceções & Tratamento
+
+* **Sem saldo / item bloqueado:** fila de exceções (substituto, adiantamento, compra urgente).
+* **Não devolveu item obrigatório:** aviso imediato, bloqueio de novas retiradas (política opcional), notificação ao líder.
+* **Entrada divergente** (sem finalidade/documento): quarentena até regularização.
+* **Lote/validade inválida:** impedir uso e propor **retorno 5S**.
+
+
+## 10) Roadmap de implantação (sugestão)
+
+1. **Semana 1–2**: Catálogo, políticas (devolução/5S), atalhos PDV, integrações mínimas (Contratos/OP).
+2. **Semana 3–4**: Relatórios tempo real, pendências de devolução, KPIs básicos, auditoria.
+3. **Semana 5–6**: Reposição semi-automática (mínimo/ideal + em trânsito), múltiplos/MOQ.
+4. **Semana 7–8**: 5S avançado (anexos), anomalias de consumo, BI.
+
+---
+
+## 11) RACI (resumo)
+
+* **R (Responsible):** Almoxarife (movimento), Conferente (entrada), Compras (reposição).
+* **A (Accountable):** Gestor de Suprimentos/Operações.
+* **C (Consulted):** Produção, SSMA, Financeiro/Contábil.
+* **I (Informed):** Contratos/Projetos, RH (EPI).
+
+
+## 12) Quick wins & Boas práticas
+
+* **Cartão de atalho** fixo no balcão (F1…F9).
+* **Pendência de devolução** visível por colaborador ao logar no PDV.
+* **Etiquetas com QR** por endereço e por item crítico.
+* **Motivos padronizados** (dropdown) e **finalidade obrigatória**.
+* **Treino de 15 min** para novos usuários (fluxo PDV + devoluções).
+
+
+### Resultado esperado (EL-01)
+
+Pipeline operante com **execução rápida**, **rastreável** e **orientada a políticas**, alimentando **reposição semi-automática** e **governança de estoque** — pronto para apresentação e decisão de implementação.
+
+
+```Ruby
+[ Entrada de Materiais + Captura ágil e auditável ]
+│ ├─ Identifica origem (NF-e/chave bipada, digitação, manual, apontamento sem documento)
+│ ├─ Valida item/lote/validade e destino (depósito/endereço)
+│ ├─ Registra evidências (foto/anexo) e quem lançou
+│ └─ Atualiza saldo + integrações (compras/fiscal) com trilha de auditoria
+│
+├──▶ Conclusão com frase curta: Entrada registrada e estoque atualizado
+[ Saída de Material (PDV) + 100% via teclado/scan ]
+│ ├─ Busca rápida (código/QR), define quantidade e destino (Contrato/OP/CC)
+│ ├─ Aplica política (ex.: devolução obrigatória / lote exigido)
+│ ├─ Baixa estoque com “quem pegou / quem liberou / motivo”
+│ └─ Gera comprovante e, se obrigatório, pendência de devolução
+│
+├──▶ Conclusão com frase curta: Saída confirmada em segundos
+[ Devolução de Material + Pendência rastreável ]
+│ ├─ Vincula ao movimento de saída (ID/colaborador/item)
+│ ├─ Confere integridade (lote/condição) e fecha pendência
+│ ├─ Retorna ao estoque ou direciona para descarte/reparo
+│ └─ Mantém histórico de cumprimento (SLA por colaborador)
+│
+├──▶ Conclusão com frase curta: Pendência fechada, saldo reconciliado
+[ Retorno 5S + Destinação correta de itens inservíveis ]
+│ ├─ Classifica retorno (inservível, quebrado, EPI vencido)
+│ ├─ Registra causa e destino (descarte, reciclagem, conserto)
+│ ├─ Não repõe saldo de “consumo final” (apenas evidencia)
+│ └─ Gera alertas para compras/segurança se houver padrão de falha
+│
+├──▶ Conclusão com frase curta: Conformidade 5S evidenciada
+[ Retorno Simples + Correção de retirada por engano ]
+│ ├─ Seleciona saída original e confirma devolução íntegra
+│ ├─ Restitui saldo ao endereço/lote de origem
+│ ├─ Registra quem devolveu e quem conferiu
+│ └─ Atualiza indicadores de acurácia e recorrência
+│
+├──▶ Conclusão com frase curta: Estoque reposto sem ruído
+[ Relatórios + Visão operacional e gerencial ]
+│ ├─ Tempo real, diário, quinzenal, mensal, semestral, anual e período customizado
+│ ├─ Por material/cliente/contrato/OP e por colaborador/conferente/encarregado
+│ ├─ Frequência de visitas ao almoxarifado por colaborador (produtividade)
+│ └─ Classificação por tipo (venda, locação, outros) e custos associados
+│
+├──▶ Conclusão com frase curta: Decisão com dados, não suposição
+[ Monitoramento de Estoque + Reposição semi-automática ]
+│ ├─ Coleta finalidade por nota/ítem (para quê, demanda, centro de custo)
+│ ├─ Calcula sugerido: alvo = 1,5×mínimo; ajusta MOQ/múltiplos/lead time
+│ ├─ Gera pedido semi-automático para revisão de compras
+│ └─ Emite alertas de ruptura/excesso e acompanha em trânsito
+│
+├──▶ Conclusão com frase curta: Repor certo, na hora certa
+[ Catálogo de Materiais + Governança de uso ]
+│ ├─ Padroniza cadastro (UOM, família, políticas de devolução e 5S)
+│ ├─ Define finalidade típica por item (produção, manutenção, EPI, venda)
+│ ├─ Bloqueia itens críticos sem destino (Contrato/OP/CC)
+│ └─ Mantém trilha MDM para auditoria e BI
+│
+├──▶ Conclusão com frase curta: Catálogo limpo evita desperdício
+[ Monitoramento de Ferramentas + Viabilidade e controle ]
+│ ├─ Empréstimo/retorno com responsável e prazo
+│ ├─ Estado de conservação, manutenção preventiva e calibração
+│ ├─ Consumo de peças (baixas automáticas por OS)
+│ └─ Indicadores de disponibilidade e custo por hora
+│
+├──▶ Conclusão com frase curta: Ferramenta certa, sempre pronta
+[ Segurança, Atalhos e Auditoria + Operação fluida e confiável ]
+│ ├─ Atalhos de PDV (F1…F9) para zero-mouse e alto giro
+│ ├─ Perfis e segregação (solicitante, liberador, aprovador)
+│ ├─ Logs completos: quem, quando, onde, por quê, com anexo
+│ └─ Integrações ERP/Fiscal/Produção para consistência ponta a ponta
+│
+├──▶ Conclusão com frase curta: Rápido no balcão, sólido na auditoria
+
+```
